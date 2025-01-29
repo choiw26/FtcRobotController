@@ -36,6 +36,16 @@ import org.firstinspires.ftc.teamcode.Roadrunner.drive.SampleMecanumDrive;
  *                  \________/
  *
  * Uncomment the @Disabled tag below to use this opmode.
+ *
+ * 0 - left front
+ * 1 - left rear
+ * 2 - right rear
+ * 3 - right front
+ *
+ * Front Right - x ( (Front left)
+ * Left Back - y (Front right)
+ * Right Back - a (back left)
+ * Left Front - b (back right)
  */
 @Config
 @TeleOp(group = "drive")

@@ -4,23 +4,21 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 @TeleOp
-public class ClawAngleTest extends OpMode{
-    public static double clawOpenPosition = 0.33333; //
-    public static double closeclawposition = 0.65;
-    public static double rotateGrabPosition = 0.279;
-    public static double rotateplaceposition = 0.5;
+public class NewClawAngleTest extends OpMode{
+    public static double clawOpenPosition = 0; //
+    public static double closeclawposition = 1.0;
+    public static double rotateGrabPosition = 0;
+    public static double rotateplaceposition = 1.0;
 
-    double ServoPositionClaw;
-    double ServoPositionRotate;
+    static double ServoPositionClaw;
+    static double ServoPositionRotate;
     //
 
-    public static double ActualClawSpeedIncrement = 0.007;
-    public static double ActualRotateSpeedIncrement = 0.007;
+    public static double ActualClawSpeedIncrement = 0.002;
+    public static double ActualRotateSpeedIncrement = 0.002;
 
     public double clawSpeedIncrement = 0;
     public double rotateSpeedIncrement = 0;

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 @TeleOp
 public class NewClawTest extends OpMode{
-    public static double clawOpenPosition = 0.33333;
+    public static double clawOpenPosition = 0.5;
     public static double closeclawposition = 0.65;
     public static double rotateGrabPosition = 0.28;
     public static double rotateplaceposition = 0.5;
@@ -41,8 +41,10 @@ public class NewClawTest extends OpMode{
     public void init() {
         ClawServo = hardwareMap.get(Servo.class, "left servo");//TODO CHANGEs MADE OPPOSITE
         RotateServo = hardwareMap.get(Servo.class, "right servo");
-        ClawServo.setPosition(clawOpenPosition);
-        RotateServo.setPosition(rotateGrabPosition);
+        ServoPositionRotate = RotateServo.getPosition();
+        ServoPositionClaw = ClawServo.getPosition();
+        ClawServo.setPosition(ServoPositionRotate);
+        RotateServo.setPosition(ServoPositionClaw);
 
         leftTriggerPressed = false;
         leftBumperPressed = false;
@@ -51,8 +53,8 @@ public class NewClawTest extends OpMode{
     }
 
     public void start() {
-        ClawServo.setPosition(clawOpenPosition); //0.3333333
-        RotateServo.setPosition(rotateGrabPosition); //0.5
+        ServoPositionRotate = RotateServo.getPosition();
+        ServoPositionClaw = ClawServo.getPosition();
     }
 
     @Override
@@ -125,6 +127,7 @@ public class NewClawTest extends OpMode{
         ServoPositionRotate = Math.min(rotateplaceposition //0.749 rotate place bigger
                 ,Math.max(rotateGrabPosition, ServoPositionRotate)); //0.5 rotate grab smaller
         RotateServo.setPosition(ServoPositionRotate);
+        ServoPositionRotate = RotateServo.getPosition();
 
         telemetry.addData("Rotate Servo position", ServoPositionRotate);
         telemetry.addData("Rotate Servo increment", rotateSpeedIncrement);

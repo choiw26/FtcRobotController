@@ -9,11 +9,13 @@
 // Copied Rain's Code
 
 package org.firstinspires.ftc.teamcode.CompetitionCode.Mechanisms;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 
@@ -39,6 +41,8 @@ public class PbClaw {
     //CLAW DEFINE
     public Servo ClawServo;  // LEFT
     public Servo RotateServo; //RIGHT
+
+    public CRServo contServo;
     //
 
     //TODO Viperslide
@@ -54,15 +58,22 @@ public class PbClaw {
     public double distancePerTick = distancePerRotation/cprviperSlide;
     public double maxRotation = 8.1; //Rotation
 
-    //
+    //TODO PID CONTROLLER - VIPER SLIDE
+    public static double Kp = 0.05;
+    public static double Ki = 0;
+    public static double Kd = 0;
+    PIDController control = new PIDController(Kp,Ki,Kd);
+
     //
 
 
     public void init(HardwareMap hwmap) {
-        ClawServo = hwmap.get(Servo.class, "left servo");
-        RotateServo = hwmap.get(Servo.class, "right servo");
-        ClawServo.setPosition(OpenClawPosition);
-        RotateServo.setPosition(RotateGrabPosition);
+//        ClawServo = hwmap.get(Servo.class, "left servo");
+//        RotateServo = hwmap.get(Servo.class, "right servo");
+//        ClawServo.setPosition(OpenClawPosition);
+//        RotateServo.setPosition(RotateGrabPosition);
+         contServo = hwmap.get(CRServo.class, "CRS");;
+
 
         //
 
@@ -123,24 +134,20 @@ public class PbClaw {
     }
 
     public void ViperSlideSetPosition(double centimeters, double speed) {
-        viperSlideLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        viperSlideRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        //
-        int goal = (int)(Math.round (centimeters / distancePerRotation * cprviperSlide));
-        //
-        viperSlideLeft.setTargetPosition(goal);
-        viperSlideRight.setTargetPosition(goal);
-        viperSlideLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        viperSlideRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        //
-        viperSlideLeft.setPower(speed);
-        viperSlideRight.setPower(speed);
-        //
-        while (viperSlideLeft.isBusy() || viperSlideRight.isBusy()) {
-        }
-        viperSlideLeft.setPower(0.0);
-        viperSlideRight.setPower(0.0);
+        viperSlideRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        viperSlideLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
+        int targetPosition = (int) (centimeters / distancePerRotation * cprviperSlide);
+            // update pid controller
+            viperSlideLeft.setTargetPosition(targetPosition);
+            viperSlideRight.setTargetPosition(targetPosition);
+            viperSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            viperSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            viperSlideLeft.setPower(.5);
+            viperSlideRight.setPower(.5);
+
     }
+
 
 
     public void ViperSlideAddPosition(double centimeters, double speed) {
@@ -167,6 +174,10 @@ public class PbClaw {
         viperSlideLeft.setPower(0.0);
         viperSlideRight.setPower(0.0);
         return;
+    }
+
+    public void setCRServoSpeed(double speed) {
+        contServo.setPower(speed);
     }
 
 
